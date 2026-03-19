@@ -1,7 +1,0 @@
-openai
-opencv-python
-numpy
-requests
-paddleocr
-paddlepaddle
-websocket-client

@@ -28,9 +28,3 @@ def write_log(file_path, new_log):
         print("日志已成功写入文件末尾。")
     except Exception as e:
         print(f"写入文件时出错: {e}")
-
-
-def read(filename):
-    with open(filename, 'r',encoding='utf-8') as file:
-        strings = file.readlines()
-        return strings

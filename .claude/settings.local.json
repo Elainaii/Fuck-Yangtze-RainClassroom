@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:ai.google.dev)",
+      "Bash(ls -la \"E:\\\\py\\\\Fuck-RainClassroom\\\\.claude\"\" 2>nul || echo \"Directory not found or empty \")",
+      "Bash(del \"E:\\\\py\\\\Fuck-RainClassroom\\\\util\\\\enncy.py\")",
+      "Bash(del \"E:\\\\py\\\\Fuck-RainClassroom\\\\util\\\\notice.py\")",
+      "Bash(del \"E:\\\\py\\\\Fuck-RainClassroom\\\\config.ini\")",
+      "Bash(uv pip install:*)",
+      "Bash(uv pip uninstall:*)",
+      "Bash(.venv/Scripts/python:*)",
+      "Bash(del \"E:\\\\py\\\\Fuck-RainClassroom\\\\requirements.txt\")"
+    ]
+  }
+}
