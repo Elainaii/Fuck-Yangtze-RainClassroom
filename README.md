@@ -21,9 +21,9 @@
 ![图片4](src/img/Step_4.png)
 
 ### 🚀 开始配置
-1.进入config.py
+1.复制config_example.py为config.py
 
-2.填写config
+2.填写config.py
 
 3.安装依赖
 ```bash
@@ -56,5 +56,4 @@ python start.py
 复制粘贴得到的id到config.txt，并保存即可
 
 ## [获取AI_KEY(AI 用于解题或辅助题库搜题规格化答案)](https://api.chatanywhere.org/v1/oauth/free/render)
-## [获取ENNCY_KEY(言溪题库 用于题目为空时搜题)](https://tk.enncy.cn/)
 
