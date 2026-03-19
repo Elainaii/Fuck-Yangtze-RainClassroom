@@ -1,26 +1,6 @@
 # 长江雨课堂定时签到+听课答题
 
 ### 🚀 开始配置
-1.按下面教程拿到SESSIONID，或者自己抓APP的包
-
-2.按图中路径，配置名为SESSION的环境变量，值为SESSIONID的值
-![图片1](src/img/Step_1.png)
-![图片2](src/img/Step_2.png)
-
-3.继续在设置中，修改选项(为了写入日志)
-![图片3](src/img/Step_3.png)
-
-
-4.再配置两个secret，AI_KEY和ENNCY_KEY，用于搜题答题，获取方式在末尾
-
-5.再配置一个secret，FILTERED_COURSES，用英文逗号隔开，不要有空格，填写需要一直监听答题的课程，为空则代表所有课程都监听
-
-例如：计算机组成原理,数据结构
-
-6.去Action板块Run,观察运行结果，检查是否通过
-![图片4](src/img/Step_4.png)
-
-### 🚀 开始配置
 1.复制config_example.py为config.py
 
 2.填写config.py
@@ -46,6 +26,8 @@ python start.py
 
 
 ## 获取SESSIONID方式
+
+下面是手动获取，脚本支持填写账号密码自动获取
 
 访问 https://changjiang.yuketang.cn/ ,登录后，按F12
 ![图片1](src/screenShot/1.png)
