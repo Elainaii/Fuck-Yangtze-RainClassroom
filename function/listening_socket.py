@@ -1,11 +1,19 @@
 import threading
 import concurrent.futures
 import time
+import random
 
 import requests
 import websocket
 import json
-from config import host, api, headers, question_type
+from config import (
+    host,
+    api,
+    headers,
+    question_type,
+    answer_delay_seconds,
+    answer_delay_jitter_seconds,
+)
 from util.ai import request_ai
 from util.timestamp import get_date_time, get_now
 
@@ -43,6 +51,7 @@ def on_message_connect(ppt_jwt, lesson_id, identity_id, socket_jwt, course_name)
     problem_list = dict()       # q_id -> 题目元数据
     precomputed = dict()        # q_id -> AI 预计算的答案列表
     precompute_futures = dict() # q_id -> Future (正在计算中)
+    answer_due_times = dict()   # q_id -> 最早允许答题时间戳
     fetched_pres_ids = set()
     answered_ids = set()
     refetch_requested = set()   # 已触发过 PPT 重新获取的 q_id，防止无限循环
@@ -52,6 +61,11 @@ def on_message_connect(ppt_jwt, lesson_id, identity_id, socket_jwt, course_name)
 
     def log(msg):
         print(f"[{get_now()}] [{course_name}] {msg}")
+
+    def get_answer_delay_seconds():
+        min_delay = max(0, answer_delay_seconds - answer_delay_jitter_seconds)
+        max_delay = max(min_delay, answer_delay_seconds + answer_delay_jitter_seconds)
+        return random.uniform(min_delay, max_delay)
 
     def safe_send(ws, data):
         try:
@@ -266,6 +280,19 @@ def on_message_connect(ppt_jwt, lesson_id, identity_id, socket_jwt, course_name)
 
             problem = problem_list.get(q_id)
             if problem is not None:
+                due_time = answer_due_times.get(q_id)
+                if due_time is None:
+                    delay_seconds = get_answer_delay_seconds()
+                    due_time = time.time() + delay_seconds
+                    answer_due_times[q_id] = due_time
+                    log(f"题目 {q_id} 已进入延迟答题，计划 {delay_seconds:.1f}s 后提交")
+
+                remaining = due_time - time.time()
+                if remaining > 0:
+                    log(f"题目 {q_id} 延迟中，剩余 {remaining:.1f}s 后答题")
+                    schedule_poll(ws, min(POLL_INTERVAL, max(1, remaining)))
+                    return
+
                 try:
                     submit_answer(q_id, problem)
                 except Exception as e:
@@ -275,6 +302,7 @@ def on_message_connect(ppt_jwt, lesson_id, identity_id, socket_jwt, course_name)
                 problem_list.pop(q_id, None)
                 precompute_futures.pop(q_id, None)
                 precomputed.pop(q_id, None)
+                answer_due_times.pop(q_id, None)
                 answered_ids.add(q_id)
                 send_fetchtimeline(ws)
             else:
